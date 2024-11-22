@@ -1,0 +1,9 @@
+io:
+  label: I/O
+  permalink: /io
+  description: I/O related technologies
+
+others:
+  label: 其他
+  permalink: /others
+  description: 非技术文章
