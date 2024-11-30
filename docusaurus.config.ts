@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'TinyFunction Blogs',
-  tagline: '分享 TinyFunction 是如何造轮子的',
+  tagline: '以小见大，用代码构建知识桥梁',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -35,7 +35,11 @@ const config: Config = {
     [
       'classic',
       {
-        docs: false,
+        docs: {
+            path: 'articles',
+            breadcrumbs: true,
+            sidebarPath: 'sidebars.ts',
+        },
         blog: {
           showReadingTime: true,
           feedOptions: {
@@ -68,7 +72,13 @@ const config: Config = {
         src: 'img/logo.jpeg',
       },
       items: [
-        {to: '/blog', label: '博客', position: 'left'},
+        {
+          type: 'docSidebar',
+          sidebarId: 'articlesSidebar',
+          position: 'left',
+          label: '博客',
+        },
+        {to: '/blog', label: '小记', position: 'left'},
         {
           href: 'https://github.com/TinyFunction',
           label: 'GitHub',
@@ -80,10 +90,19 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: '更多',
+          title: '优质内容',
           items: [
             {
               label: '博客',
+              to: '/articles/begin',
+            },
+          ],
+        },
+        {
+          title: '更多',
+          items: [
+            {
+              label: '小记',
               to: '/blog',
             },
             {

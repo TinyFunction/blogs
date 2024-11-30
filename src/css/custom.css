@@ -31,25 +31,25 @@
 
 
 :root {
-  --ifm-color-primary: #a9a9a9; /* 主色 - 中灰 */
-  --ifm-color-primary-dark: #8f8f8f; /* 深灰 */
-  --ifm-color-primary-darker: #7d7d7d; /* 更深的灰 */
-  --ifm-color-primary-darkest: #5f5f5f; /* 最深的灰 */
-  --ifm-color-primary-light: #c0c0c0; /* 浅灰 */
-  --ifm-color-primary-lighter: #d6d6d6; /* 更浅的灰 */
-  --ifm-color-primary-lightest: #e8e8e8; /* 最浅的灰 */
+  --ifm-color-primary: #04636B; /* 主色 - 深蓝绿 */
+  --ifm-color-primary-dark: #03525a; /* 更深一些的蓝绿色 */
+  --ifm-color-primary-darker: #024147; /* 更深的蓝绿色 */
+  --ifm-color-primary-darkest: #012f34; /* 最深的蓝绿色 */
+  --ifm-color-primary-light: #2c8993; /* 较浅的蓝绿色 */
+  --ifm-color-primary-lighter: #55adae; /* 更浅的蓝绿色 */
+  --ifm-color-primary-lightest: #80cbb9; /* 非常浅的蓝绿色 */
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.05); /* 突出代码行背景色 */
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #747474; /* 主色 - 中灰偏暗 */
-  --ifm-color-primary-dark: #666666; /* 深灰 */
-  --ifm-color-primary-darker: #585858; /* 更深的灰 */
-  --ifm-color-primary-darkest: #3f3f3f; /* 最深的灰 */
-  --ifm-color-primary-light: #858585; /* 浅灰 */
-  --ifm-color-primary-lighter: #969696; /* 更浅的灰 */
-  --ifm-color-primary-lightest: #a8a8a8; /* 最浅的灰 */
+  --ifm-color-primary: #04636B; /* 在暗模式下保持主色不变，以维持品牌一致性 */
+  --ifm-color-primary-dark: #034f55; /* 暗模式下的深蓝绿色 */
+  --ifm-color-primary-darker: #023c41; /* 暗模式下的更深蓝绿色 */
+  --ifm-color-primary-darkest: #01292d; /* 暗模式下的最深蓝绿色 */
+  --ifm-color-primary-light: #1b7c84; /* 暗模式下的较浅蓝绿色 */
+  --ifm-color-primary-lighter: #318f99; /* 暗模式下的更浅蓝绿色 */
+  --ifm-color-primary-lightest: #48a1ab; /* 暗模式下的非常浅蓝绿色 */
   --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.1); /* 突出代码行背景色 */
 }
 
