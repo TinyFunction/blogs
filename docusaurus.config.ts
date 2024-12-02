@@ -39,6 +39,7 @@ const config: Config = {
             path: 'articles',
             breadcrumbs: true,
             sidebarPath: 'sidebars.ts',
+            routeBasePath: 'articles'
         },
         blog: {
           showReadingTime: true,
@@ -94,7 +95,7 @@ const config: Config = {
           items: [
             {
               label: '博客',
-              to: '/articles/begin',
+              to: '/articles/intro',
             },
           ],
         },
