@@ -63,3 +63,6 @@ $ yarn start
 本项目已经配置了 Github Actions。
 
 项目提交或合并到 `main` 分支时，会自动触发构建。构建成功后，访问 `https://tinyfun.club` 查看效果。
+
+
+
