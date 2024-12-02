@@ -112,6 +112,19 @@ const config: Config = {
             },
           ],
         },
+        {
+          title: '友情链接',
+          items: [
+            {
+              label: 'wjc133 的 CSDN 博客',
+              href: 'https://blog.csdn.net/wjc133',
+            },
+            {
+              label: 'onecastle\'s blog',
+              href: 'https://onecastle.cn',
+            }
+          ],
+        },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} TinyFunction, Inc.`,
     },
