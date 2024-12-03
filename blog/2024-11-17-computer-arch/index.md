@@ -2,7 +2,7 @@
 slug: computer-arch
 title: 计算机架构
 authors: [wjc133]
-tags: [others]
+tags: [x86]
 ---
 ![](./img/Page01.png)
 ![](./img/Page02.png)
