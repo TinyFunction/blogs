@@ -13,7 +13,7 @@ X Window System 是一套服务端与客户端分离的窗口管理系统。那�
 
 大概就是如图所示：
 
-![](https://github.com/SinestroEdmonce/SinestroEdmonce.github.io/raw/master/images/posts/x11_local2server_intro.png)
+![](img/01.png)
 
 可以参考：[https://sinestroedmonce.github.io/2019/03/28/macos-remote-sever-GUIconnection-intro/](https://sinestroedmonce.github.io/2019/03/28/macos-remote-sever-GUIconnection-intro/)
 
@@ -36,30 +36,30 @@ done.
 
 写入后的 vhd 文件如图所示：
 
-![](https://cdn.nlark.com/yuque/0/2024/png/250145/1731390034767-beaf8ff6-25fe-4cfd-9691-8cbfb4c2e03a.png)
+![](img/02.png)
 
 ### 配置bochs
 bochs默认会读取当前目录下的 bochsrc 文件，也可以通过`bochs -f <config_file_path>`来指定。
 
 如果不希望读取配置，可以使用`bochs -n`来强制重新配置一套新配置。
 
-![](https://cdn.nlark.com/yuque/0/2024/png/250145/1731389256526-18a2f86e-85f1-4677-9cf4-79347faa02e9.png)
+![](img/03.png)
 
 进入选项编辑后，编辑第 12 项——disk & boot options
 
-![](https://cdn.nlark.com/yuque/0/2024/png/250145/1731389301776-4fa9af76-977e-437a-b384-39caa1b4bc63.png)
+![](img/04.png)
 
 然后编辑`[4] First HD/CD on channel 0`
 
-![](https://cdn.nlark.com/yuque/0/2024/png/250145/1731389512440-a66bc3fe-a64b-4caf-8697-6d25a5be12cf.png)
+![](img/05.png)
 
 再编辑 [15] Boot Options
 
-![](https://cdn.nlark.com/yuque/0/2024/png/250145/1731389554848-2c78e053-8cb9-4ec2-976e-2d9724cadf6d.png)
+![](img/06.png)
 
 保存配置
 
-![](https://cdn.nlark.com/yuque/0/2024/png/250145/1731389600997-37c16bd8-9695-4147-81c7-f152759bb2b2.png)
+![](img/07.png)
 
 可以通过`bochs -f p5`按刚才的配置启动。
 
@@ -110,7 +110,7 @@ dd if=boot.bin of=boot.img bs=512 count=1 conv=notrunc
 
 ## 问题处理
 ### could not open hard drive image file 'boot.vhd'
-![](https://cdn.nlark.com/yuque/0/2024/png/250145/1731389828819-35e4f0a0-be90-4340-94d9-9f81d875bab3.png)
+![](img/08.png)
 
 在终端会显示具体的错误原因。需要注意的是，bochs 有点傻，它只能读取当前目录下的 bochsrc 文件，而且 bochsrc 文件中的镜像文件路径也只能在当前目录下，否则就会加载失败。
 
