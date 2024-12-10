@@ -1,3 +1,9 @@
+---
+slug: go-memory
+title: GO 内存模型
+authors: [OneCastle]
+tags: [go]
+---
 # 前言
 这篇文章会为大家介绍一下 GO 内存管理模型，了解 GO 在进行内存申请的时候，go 是如何进行快速的分配内存。
 
