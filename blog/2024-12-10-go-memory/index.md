@@ -1,7 +1,7 @@
 ---
 slug: go-memory
 title: GO 内存模型
-authors: [OneCastle]
+authors: [OneCastle5280]
 tags: [go]
 ---
 # 前言
