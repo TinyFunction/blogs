@@ -40,6 +40,7 @@
   --ifm-color-primary-lightest: #80cbb9; /* 非常浅的蓝绿色 */
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.05); /* 突出代码行背景色 */
+  background-color: #f8f8f8; /* 页面背景色 */
 }
 
 [data-theme='dark'] {
@@ -51,8 +52,5 @@
   --ifm-color-primary-lighter: #318f99; /* 暗模式下的更浅蓝绿色 */
   --ifm-color-primary-lightest: #48a1ab; /* 暗模式下的非常浅蓝绿色 */
   --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.1); /* 突出代码行背景色 */
-}
-
-body{
-  background-color: #f8f8f8;
+  background-color: #1b1b1d; /* 页面背景色 */
 }
