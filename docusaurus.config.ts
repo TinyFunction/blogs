@@ -59,6 +59,8 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
+          blogSidebarTitle: '近期博客',
+          blogSidebarCount: 50,
         },
         theme: {
           customCss: './src/css/custom.css',
