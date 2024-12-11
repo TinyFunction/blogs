@@ -3,6 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import type { GiscusConfig } from '@site/src/components/Comments';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -51,6 +52,7 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
+          blogPostComponent: require.resolve('./src/theme/BlogPostPage/index.tsx'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
@@ -136,6 +138,12 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
+    giscus: {
+      repo: 'TinyFunction/blogs',
+      repoId: 'R_kgDONTNBrA',
+      category: 'General',
+      categoryId: 'DIC_kwDONTNBrM4Ck2QY',
+    } satisfies Partial<GiscusConfig>,
   } satisfies Preset.ThemeConfig,
 };
 
