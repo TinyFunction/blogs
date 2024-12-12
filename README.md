@@ -46,6 +46,7 @@ slug: computer-arch  # url 资源标识，要求唯一
 title: 计算机架构     # 博客标题
 authors: [wjc133]   # 博客作者列表，英文逗号分割
 tags: [others]      # 博客标签列表
+hide_comment        # 是否隐藏评论
 ---
 ```
 
