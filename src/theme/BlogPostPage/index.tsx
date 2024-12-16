@@ -51,7 +51,6 @@ function BlogPostPageContent({
       {(nextItem || prevItem) && (
         <BlogPostPaginator nextItem={nextItem} prevItem={prevItem} />
       )}
-     <Comment />
      {!hideComment && <Comment />}
     </BlogLayout>
   );
