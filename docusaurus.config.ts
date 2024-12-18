@@ -128,6 +128,10 @@ const config: Config = {
             {
               label: 'onecastle\'s blog',
               href: 'https://onecastle.cn',
+            },
+            {
+              label: 'Agility6\'s blog',
+              href: 'https://agility6.site/blog/'
             }
           ],
         },
