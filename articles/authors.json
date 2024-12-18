@@ -1,0 +1,32 @@
+{
+  "OneCastle5280": {
+    "name": "OneCastle5280",
+    "title": "Back-end Engineer @ SHOPLINE",
+    "url": "https://github.com/OneCastle5280",
+    "image_url": "https://github.com/OneCastle5280.png",
+    "page": true,
+    "socials": {
+      "github": "OneCastle5280"
+    }
+  },
+  "shildon": {
+    "name": "shildon",
+    "title": "Back-end Engineer @ SHOPLINE",
+    "url": "https://github.com/shildondu",
+    "image_url": "https://github.com/shildondu.png",
+    "page": true,
+    "socials": {
+      "github": "shildondu"
+    }
+  },
+  "wjc133": {
+    "name": "wjc133",
+    "title": "Back-end Engineer @ SHOPLINE",
+    "url": "https://github.com/wjc133",
+    "image_url": "https://github.com/wjc133.png",
+    "page": true,
+    "socials": {
+      "github": "wjc133"
+    }
+  }
+}
