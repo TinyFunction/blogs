@@ -1,5 +1,5 @@
 import { useDoc } from "@docusaurus/plugin-content-docs/client";
-import authorsData from "@site/articles/authors.json";
+import authorsData from "@site/blog/authors.json";
 import React from "react";
 
 import {

@@ -45,6 +45,7 @@ const config: Config = {
             routeBasePath: 'articles'
         },
         blog: {
+          authorsMapPath: 'authors.json',
           showReadingTime: true,
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],
