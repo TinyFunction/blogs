@@ -34,6 +34,10 @@ const config: Config = {
     locales: ['zh-Hans'],
   },
 
+  scripts: [
+    {src: 'https://hm.baidu.com/hm.js?f523d310f5c60b171850572af75ebb99', async:true}
+  ],
+
   presets: [
     [
       'classic',
