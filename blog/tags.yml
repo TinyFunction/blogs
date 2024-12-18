@@ -12,3 +12,13 @@ others:
   label: 其他
   permalink: /others
   description: 非技术文章
+
+go:
+  label: Go语言
+  permalink: /go
+  description: Go语言相关知识点梳理
+
+network:
+  label: 网络
+  permalink: /network
+  description: 计算机网络

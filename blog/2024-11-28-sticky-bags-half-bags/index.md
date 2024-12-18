@@ -2,7 +2,7 @@
 slug: sticky-bags-half-bags
 title: 什么是黏包，半包又是什么？
 authors: [OneCastle5280]
-tags: [网络]
+tags: [network]
 ---
 ## 1. 前言
 最近在学习如何手写一个 [tiny-mq](https://github.com/OneCastle5280/tiny-mq)，其中在写网络通讯模块的时候，了解到黏包和半包的概念，并且需要对其进行处理；这篇文档就简单聊一聊什么是黏包、半包，产生的原因是什么，对我们有什么影响，我们应该如何来处理

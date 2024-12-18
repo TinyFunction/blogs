@@ -61,6 +61,8 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
+          blogSidebarTitle: '近期博客',
+          blogSidebarCount: 50,
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -128,6 +130,10 @@ const config: Config = {
             {
               label: 'onecastle\'s blog',
               href: 'https://onecastle.cn',
+            },
+            {
+              label: 'Agility6\'s blog',
+              href: 'https://agility6.site/blog/'
             }
           ],
         },
