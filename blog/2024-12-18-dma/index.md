@@ -189,25 +189,25 @@ out dx, al
 
 ; 设置地址寄存器和页寄存器
 mov dx, 0x04
-mov al, 0xFF  ; 地址低 8 位
+mov al, 0xFF  ; 设置地址 7～0 位
 out dx, al
-mov al, 0x00  ; 地址高 8 位
+mov al, 0x00  ; 设置地址 15～8 位
 out dx, al
 
 mov dx, 0x81  ; 页寄存器
-mov al, 0x00  ; 设置地址高 4 位
+mov al, 0x00  ; 设置地址 19~16 位
 out dx, al
 
 ; 设置计数寄存器
 mov dx, 0x05
 mov al, 0xFF  ; 计数低 8 位（511）
 out dx, al
-mov al, 0x01  ; 计数高 8 位
+mov al, ah  ; 计数高 8 位
 out dx, al
 
 ; 设置模式寄存器
 mov dx, 0x0B
-mov al, 0x94  ; 通道 2，读模式，单字节传输
+mov al, 0x56  ; 通道 2，读模式，单字节传输
 out dx, al
 
 ; 启用通道 2
