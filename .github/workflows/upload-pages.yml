@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2  # 拉取完整的提交历史
       # 👇 Build steps
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -40,6 +42,12 @@ jobs:
       - name: Check blog posts changes
         id: check_blogs
         run: |
+          if [ $(git rev-list --count HEAD) -eq 1 ]; then
+            echo "Initial commit detected. Skipping blog change detection."
+            echo "blogs_changed=false" >> $GITHUB_ENV
+            exit 0
+          fi
+
           ADDED_BLOGS=$(git diff --diff-filter=A --name-only HEAD^ | grep '^blog/.*\.md$' || true)
           UPDATED_BLOGS=$(git diff --diff-filter=M --name-only HEAD^ | grep '^blog/.*\.md$' || true)
           REMOVED_BLOGS=$(git diff --diff-filter=D --name-only HEAD^ | grep '^blog/.*\.md$' || true)
