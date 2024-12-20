@@ -37,10 +37,6 @@ jobs:
         with:
           # 👇 Specify build output path
           path: build
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
-      # 👇 Notification steps
       - name: Check blog posts changes
         id: check_blogs
         run: |
@@ -69,6 +65,9 @@ jobs:
           else
             echo "blogs_changed=false" >> $GITHUB_ENV
           fi
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
       - name: Send WeChat notification
         id: send_wechat
         if: env.blogs_changed == 'true'
