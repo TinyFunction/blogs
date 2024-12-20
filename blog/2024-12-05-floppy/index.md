@@ -397,8 +397,6 @@ read_sector:
     ret 
 ; playground area end
 
-hlt
-
 ; bx = 要输出的字符
 ; 输出字符串
 put_string:
