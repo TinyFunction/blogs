@@ -84,21 +84,40 @@ jobs:
           ADDED_BLOGS: ${{ env.added_blogs }}
           UPDATED_BLOGS: ${{ env.updated_blogs }}
           REMOVED_BLOGS: ${{ env.removed_blogs }}
+          BASE_URL: https://tinyfun.club
         run: |
+          extract_slug() {
+            local file=$1
+            local slug=$(awk '/^slug:/ {print $2}' "$file")
+            if [ -z "$slug" ]; then
+              slug=$(basename "$file" .md)
+            fi
+            echo "$slug"
+          }
+
           if [ -n "$ADDED_BLOGS" ]; then
-            ADDED_LIST=$(echo "$ADDED_BLOGS" | sed 's/^/- /')
+            ADDED_LIST=$(echo "$ADDED_BLOGS" | while read -r line; do
+              SLUG=$(extract_slug "$line")
+              echo "- [${SLUG}](${BASE_URL}/blog/${SLUG})"
+            done)
           else
             ADDED_LIST="无新增博客"
           fi
 
           if [ -n "$UPDATED_BLOGS" ]; then
-            UPDATED_LIST=$(echo "$UPDATED_BLOGS" | sed 's/^/- /')
+            UPDATED_LIST=$(echo "$UPDATED_BLOGS" | while read -r line; do
+              SLUG=$(extract_slug "$line")
+              echo "- [${SLUG}](${BASE_URL}/blog/${SLUG})"
+            done)
           else
             UPDATED_LIST="无更新博客"
           fi
 
           if [ -n "$REMOVED_BLOGS" ]; then
-            REMOVED_LIST=$(echo "$REMOVED_BLOGS" | sed 's/^/- /')
+            REMOVED_LIST=$(echo "$REMOVED_BLOGS" | while read -r line; do
+              SLUG=$(extract_slug "$line")
+              echo "- [${SLUG}](${BASE_URL}/blog/${SLUG})"
+            done)
           else
             REMOVED_LIST="无删除博客"
           fi
@@ -107,7 +126,7 @@ jobs:
           {
             "msgtype": "markdown",
             "markdown": {
-              "content": "**📢 博客变更通知**\n> 仓库: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})\n> 分支: \`${{ github.ref_name }}\`\n> 提交信息: ${{ github.event.head_commit.message }}\n> 执行者: ${{ github.actor }}\n\n**新增博客文章**:\n${ADDED_LIST}\n\n**更新博客文章**:\n${UPDATED_LIST}\n\n查看构建详情: [Actions Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+              "content": "**📢 博客变更通知**\n> 仓库: [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})\n> 分支: \`${{ github.ref_name }}\`\n> 提交信息: ${{ github.event.head_commit.message }}\n> 执行者: ${{ github.actor }}\n\n**新增博客文章**:\n${ADDED_LIST}\n\n**更新博客文章**:\n${UPDATED_LIST}"
             }
           }
           EOF

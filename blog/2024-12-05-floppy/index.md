@@ -543,4 +543,3 @@ db 0x55, 0xaa
 有人在论坛提问他的程序 bochs 跑不起来，在其他虚拟机可以。其实说的就是 bochs 对 PIO 的支持不好。
 
 [https://f.osdev.org/viewtopic.php?t=22338](https://f.osdev.org/viewtopic.php?t=22338)
-
