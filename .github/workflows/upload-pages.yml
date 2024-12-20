@@ -95,10 +95,20 @@ jobs:
             echo "$slug"
           }
 
+          extract_title() {
+            local file=$1
+            local title=$(awk '/^title:/ {print $2}' "$file")
+            if [ -z "$title" ]; then
+              title="$file"
+            fi
+            echo "$title"
+          }
+
           if [ -n "$ADDED_BLOGS" ]; then
             ADDED_LIST=$(echo "$ADDED_BLOGS" | while read -r line; do
               SLUG=$(extract_slug "$line")
-              echo "- [${SLUG}](${BASE_URL}/blog/${SLUG})"
+              TITLE=$(extract_title "$line")
+              echo "- [${TITLE}](${BASE_URL}/blog/${SLUG})"
             done)
           else
             ADDED_LIST="无新增博客"
@@ -107,7 +117,8 @@ jobs:
           if [ -n "$UPDATED_BLOGS" ]; then
             UPDATED_LIST=$(echo "$UPDATED_BLOGS" | while read -r line; do
               SLUG=$(extract_slug "$line")
-              echo "- [${SLUG}](${BASE_URL}/blog/${SLUG})"
+              TITLE=$(extract_title "$line")
+              echo "- [${TITLE}](${BASE_URL}/blog/${SLUG})"
             done)
           else
             UPDATED_LIST="无更新博客"
@@ -116,7 +127,8 @@ jobs:
           if [ -n "$REMOVED_BLOGS" ]; then
             REMOVED_LIST=$(echo "$REMOVED_BLOGS" | while read -r line; do
               SLUG=$(extract_slug "$line")
-              echo "- [${SLUG}](${BASE_URL}/blog/${SLUG})"
+              TITLE=$(extract_title "$line")
+              echo "- [${TITLE}](${BASE_URL}/blog/${SLUG})"
             done)
           else
             REMOVED_LIST="无删除博客"
