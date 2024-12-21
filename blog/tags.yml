@@ -22,3 +22,8 @@ network:
   label: 网络
   permalink: /network
   description: 计算机网络
+
+devops:
+  label: DevOps
+  permalink: /devops
+  description: DevOps 通过自动化“软件交付”和“架构变更”的流程，来使得构建、测试、发布软件能够更加地快捷、频繁和可靠
