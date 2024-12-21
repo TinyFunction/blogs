@@ -259,46 +259,7 @@ xxx-action/
 
 Action 的代码和上面的 Shell 其实逻辑是一样的，只是改用 JS 来实现，所以没啥太多好说的。
 
-如果你希望在创建 Release 的时候自动发布 Action，可以添加如下的 workflows:
-
-```yml
-name: Release Action to Marketplace
-
-on:
-  release:
-    types: [published]
-
-jobs:
-  release:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install dependencies
-        run: |
-          npm install
-          npm run build
-
-      - name: Create release artifacts
-        run: |
-          mkdir -p release
-          cp -R dist action.yml README.md release/
-
-      - name: Upload release artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: xxx-action
-          path: release
-```
-
-如果是本地打包，则可以使用如下命令：
+本地打包，使用如下命令：
 
 ```bash
 npm install
@@ -312,6 +273,8 @@ build 对应的命令是：
     "build": "ncc build src/index.js -o dist"
 }
 ```
+
+暂时还没研究出如何在创建 Release 的时候自动打包并发布 Action，所以必须把打包后的 dist 目录也一并上传到 Github。
 
 在发布插件前，应准备好标题、描述、图标、图标颜色等物料信息，以及 README 文件。  
 在提交代码到 Github 后，Github 检测到这是一个 Action，会在 Release 时主动询问你要不要发到 GitHub Marketplace 的。
