@@ -1,15 +1,10 @@
 ---
+slug: thinking-for-distributed-transactions
 title: 对分布式事务的一些思考
-date: 2024/12/16
-categories: 分布式事务
-tags:
-- TCC
-- 分布式事务
-- 事务消息
+authors: [OneCastle5280]
+tags: [分布式事务]
 ---
 
-分布式事务是处理跨多个数据库或服务的事务操作的一种方式，它确保了一组操作要么全部成功执行，要么全部不执行，从而保持数据的一致性；下面是我对分布式事务的一些思考～
-<!-- more -->
 ## 要求
 > 阅读这篇文章之前，需要对以下知识点有所了解~
 > 1.  BASE 理论
