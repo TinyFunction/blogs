@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2  # 拉取完整的提交历史
       # 👇 Build steps
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -40,3 +42,8 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+      - name: Docusaurus Blogs Changes to Work-WeChat Action
+        uses: TinyFunction/docusaurus-blogs-changes-to-workwechat@1.0.5
+        with:
+          wechat_webhook: ${{ secrets.WECHAT_WEBHOOK }}
+          base_url: "https://tinyfun.club"

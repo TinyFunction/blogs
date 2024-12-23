@@ -3,6 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import type { GiscusConfig } from '@site/src/components/Comments';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -33,6 +34,13 @@ const config: Config = {
     locales: ['zh-Hans'],
   },
 
+  plugins: [
+    [
+        require("./src/plugins/plugin-baidu-analytics"),
+        { trackingID: "f523d310f5c60b171850572af75ebb99" }, //  传入trackingID参数
+    ],
+  ],
+
   presets: [
     [
       'classic',
@@ -44,6 +52,7 @@ const config: Config = {
             routeBasePath: 'articles'
         },
         blog: {
+          authorsMapPath: 'authors.json',
           showReadingTime: true,
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],
@@ -51,6 +60,7 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
+          blogPostComponent: require.resolve('./src/theme/BlogPostPage/index.tsx'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
@@ -59,9 +69,15 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
+          blogSidebarTitle: '近期博客',
+          blogSidebarCount: 50,
         },
         theme: {
           customCss: './src/css/custom.css',
+        },
+        gtag: {
+          trackingID: "G-3JLV4ME2MF",
+          anonymizeIP: false,
         },
       } satisfies Preset.Options,
     ],
@@ -126,6 +142,10 @@ const config: Config = {
             {
               label: 'onecastle\'s blog',
               href: 'https://onecastle.cn',
+            },
+            {
+              label: 'Agility6\'s blog',
+              href: 'https://agility6.site/blog/'
             }
           ],
         },
@@ -136,6 +156,12 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
+    giscus: {
+      repo: 'TinyFunction/blogs',
+      repoId: 'R_kgDONTNBrA',
+      category: 'General',
+      categoryId: 'DIC_kwDONTNBrM4Ck2QY',
+    } satisfies Partial<GiscusConfig>,
   } satisfies Preset.ThemeConfig,
 };
 

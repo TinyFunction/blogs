@@ -1,0 +1,58 @@
+.docAuthor {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.docAuthorImg {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  object-fit: cover;
+}
+
+.docAuthorName {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.docAuthorName a {
+  text-decoration: none;
+}
+
+.docAuthorName a:hover {
+  text-decoration: underline;
+}
+
+.docAuthorTitle {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.2;
+}
+
+.docAuthorDesc {
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+}
+
+.docAuthorSocials {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.docAuthorSocialLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1;
+}
+
+.docAuthorSocialLink:hover {
+  color: var(--ifm-color-primary);
+}

@@ -13,11 +13,14 @@ tags: [x86]
 
 所以需要探究一下软盘如何读。
 
-注意📢：这篇文章的内容中有关非中断的部分**不敢保证百分百正确**，尤其是通信步骤的部分！因为本文最后的例程我虽然写出来了，但一直没有跑通！这有可能是 bochs 的问题，也有可能是程序中哪个部分不符合 FDC 的控制协议！
+注意📢：由于这篇文章经过了多个版本的修改，所以我在这里先标注一下修改历史。
 
-搞了两天实在搞不下去，后面有新想法了再来更新。
-
-最新：学习了 **BIOS 中断**后，发现 BIOS 中断提供了直接磁盘服务(Direct Disk Service——INT 13H)，遂尝试实用中断读取软盘，果断成功了！详见第 9 节。
+| 版本 | 内容变化 |
+|-----|-------|
+|24-12-05| 初始版本，主要描述了软盘控制器相关寄存器的作用，但程序没有跑通 |
+|24-12-06| 使用 BIOS 中断实现了读取软盘数据，详见第 9 章 |
+|24-12-18| 较为系统化的了解了DMA，并修改了部分描述错误的寄存器的作用 |
+|24-12-19| 更新不使用 BIOS 中断时的读取软盘数据例程，并已成功跑通 |
 
 ## 软盘
 软盘由一种薄的、柔软的磁性材料（通常是塑料片）制成，表面涂有铁氧化物或其他磁性物质。这些磁性物质能够记录数据。  
@@ -86,13 +89,19 @@ tags: [x86]
 | **0x3F0** | 状态控制寄存器 A | 存储软盘驱动器的当前状态。 |
 | **0x3F1** | 状态控制寄存器 B | 存储一些高级状态信息。 |
 | **0x3F2** | 数字输出寄存器 (DOR) | 控制驱动器选择、马达开关和复位 FDC。 |
-| **0x3F3** | 主状态寄存器 (MSR) | 显示 FDC 的当前状态，指示是否可发送命令。 |
-| **0x3F4** | 数据寄存器 (DIR) | 用于传输命令和数据。 |
-| **0x3F5** | 数据 FIFO | 用于读写数据到软盘（命令和数据共享通道）。 |
-| **0x3F7** | 控制寄存器 | 用于控制数据速率或其他特定功能。 |
+| **0x3F4** | 主状态寄存器 (MSR) | 显示 FDC 的当前状态，指示是否可发送命令。 |
+| **0x3F5** | 数据寄存器（FIFO） | 用于读写数据到软盘（命令和数据共享通道）。 |
+| **0x3F7** | 控制寄存器 (DIR) | 用于控制数据速率或其他特定功能。 |
 
 
 ## 与 FDD 通信的步骤
+#### 设置 DMA
+要从软盘读取数据有两种方法，要么通过 DMA，要么不走 DMA，直接通过 CPU 搬运数据，也就是 PIO（Programmed Input/Output，程序化输入/输出）。
+
+⚠️ 注意：我参考的 osdev 文章中提到：目前 bochs 模拟器主要是模拟了 DMA 模式，它没有办法支持纯轮询的 PIO。
+
+软盘控制器可通过 DMA 的 2 号通道传输数据。在开始初始化软盘前，必须先初始化好 DMA 通道。具体方式方法见[有关于DMA](https://tinyfun.club/blog/dma)。
+
 #### 初始化软盘控制器
 + **复位软盘控制器**：  
 写 `0x00` 到 **DOR (0x3F2)**，然后写入 `0x1C`（开启主机和驱动器）。
@@ -128,9 +137,9 @@ tags: [x86]
 
 | 位（bit） | 名称 | 作用 |
 | --- | --- | --- |
-| 0-1 | 驱动器选择位 | 指定使用哪个驱动器： <br/>00 = 驱动器 0 <br/>01 = 驱动器 1 <br/>10 = 驱动器 2 <br/>11 = 驱动器 3。 |
+| 0-1 | 驱动器选择位 | 指定使用哪个驱动器： <br/>00 = 驱动器 0 <br/>01 = 驱动器 1 <br/>10 = 驱动器 2 <br/>11 = 驱动器 3 |
 | 2 | 复位控制位 | 1 = 正常模式；<br/>0 = 复位模式 |
-| 3 | DMA禁用位 | 1 = 禁用 DMA 传输（切换到程序控制 I/O 模式）； <br/>0 = 启用 DMA。 |
+| 3 | DMA位 | 1 = 允许中断请求并打开 DMA 传输（切换到程序控制 I/O 模式）； <br/>0 = 禁用 DMA |
 | 4 | 驱动器 0 马达开关 | 1 = 打开驱动器 0 的马达； <br/>0 = 关闭驱动器 0 的马达。 |
 | 5 | 驱动器 1 马达开关 | 1 = 打开驱动器 1 的马达； <br/>0 = 关闭驱动器 1 的马达。 |
 | 6 | 驱动器 2 马达开关 | 1 = 打开驱动器 2 的马达； <br/>0 = 关闭驱动器 2 的马达。 |
@@ -143,14 +152,14 @@ tags: [x86]
 
 | 位（bit） | 名称 | 作用 |
 | --- | --- | --- |
-| 0 | 驱动器忙状态位 0 | 1 = 驱动器 0 正在忙； <br/>0 = 驱动器 0 空闲。 |
-| 1 | 驱动器忙状态位 1 | 1 = 驱动器 1 正在忙； <br/>0 = 驱动器 1 空闲。 |
-| 2 | 驱动器忙状态位 2 | 1 = 驱动器 2 正在忙； <br/>0 = 驱动器 2 空闲。 |
-| 3 | 驱动器忙状态位 3 | 1 = 驱动器 3 正在忙； <br/>0 = 驱动器 3 空闲。 |
-| 4 | FDC命令忙状态 | 1 = FDC 正在处理命令； <br/>0 = FDC 空闲，可以接收新命令。 |
-| 5 | NDM | 非 DMA 模式（Non-DMA Mode）：1 表示正在进行非 DMA 数据传输；0 表示 DMA 模式。 |
-| 6 | DIO | 数据方向（Data Input/Output）：1 表示 FDC 向主机发送数据；0 表示主机向 FDC 发送数据。 |
-| 7 | FDC控制器忙 | 1 = FDC 正在忙于内部操作（例如磁道搜索）； 0 = FDC 空闲。 |
+| 0 | 驱动器忙状态位 0 | 1 = 驱动器 0 正在忙； <br/>0 = 驱动器 0 空闲 |
+| 1 | 驱动器忙状态位 1 | 1 = 驱动器 1 正在忙； <br/>0 = 驱动器 1 空闲 |
+| 2 | 驱动器忙状态位 2 | 1 = 驱动器 2 正在忙； <br/>0 = 驱动器 2 空闲 |
+| 3 | 驱动器忙状态位 3 | 1 = 驱动器 3 正在忙； <br/>0 = 驱动器 3 空闲 |
+| 4 | FDC命令忙状态 | 1 = FDC 正在处理命令（如果一个命令参数分多次传入，在命令结束之前，该字段会一直保持为1）； <br/>0 = FDC 空闲，可以接收新命令 |
+| 5 | NDM | 非 DMA 模式（Non-DMA Mode）：1 表示正在进行非 DMA 数据传输；0 表示 DMA 模式 |
+| 6 | DIO | 数据方向（Data Input/Output）：1 表示 FDC 有数据想要发送给 CPU（从FDC视角来看就是「快来读我」）；0 表示 FDC 期望得到 CPU 的数据（从FDC视角来看就是「快给我数据」） |
+| 7 | FDC控制器忙 | 1 = FDC 已经准备好在 FIFO 上传输数据； 0 = 没准备好 |
 
 
 ## 数据寄存器 (0x3F5)
@@ -201,178 +210,215 @@ enum FLPYDSK_CMD {
 在与 **0x3F5** 交互前，应检查主状态寄存器 (**MSR, 0x3F4**) ，0x80
 
 ## 例程
-第一个扇区是MBR：
 
-```plain
-;=======
-;常量
-;=======
-app_lba_start equ 1
+第一个扇区是 MBR，数据存储在 LBA 第 100 个扇区上。由于我参考的部分资料 LBA 都是从 0 开始计数的，所以我的程序也采用了 LBA 从 0 计数。如果你想和书中一样 LBA 从 1 开始计数，稍微修改一下 LBA 转物理磁道、磁头、扇区的代码就可以了。
+
+注意：代码中更理想的情况是响应 DMA 给出的 06 号中断，但我目前还是图省事，直接给出了一个循环来模拟等待。后续可能结合保护模式再对该程序做改造。
+
+数据输出到屏幕的过程，简单起见，我使用了 10 号中断例程。
+
+```asm
+app_lba_start equ 99
 FDC_DOR         equ 0x3F2  ; 数字输出寄存器
 FDC_MSR         equ 0x3F4  ; 主状态寄存器
-FDC_DATA        equ 0x3F5  ; 数据寄存器
+FDC_FIFO        equ 0x3F5  ; 数据寄存器
+FLPY_SECTORS_PER_TRACK equ 18
+;===========================================
+mov ax,0
+mov ss,ax
+mov sp,ax
 
-SECTION mbr align=16 vstart=0x7c00
-    ;设置段地址
-    mov ax,0
-    mov ss,ax
-    mov sp,ax
-    mov ax,0xb800
-    mov es,ax
+mov ax, cs
+add ax, 0x07c0
+mov ds, ax
 
-    mov ax,[cs:phy_base] ; 程序加载处的物理地址
-    mov dx,[cs:phy_base+0x02] ; 4字节
-    mov bx,16  
-    div bx         ; 取段地址
-    mov ds,ax
-   
-    ;读磁盘
-    xor di,di
-    mov si,app_lba_start
-    xor bx,bx
-    call read_floppy_disk_0
+mov bx, msg         ; 起始位置
+call put_string
 
-    mov cx,24
-    mov di,0x0000
-    @ll:
-        mov al,[bx]
-        mov [es:di],al
-        inc di
-        mov byte [es:di],0x07
-        inc di
-        loop @ll
+; playground area
 
-    jmp $
+;先读取程序头部
+xor di,di
+mov si,app_lba_start
+call read_floppy_disk_0
 
-;================
-; 读1个扇区的软盘数据到内存
-; di、si - 扇区 LBA 值，使用di的低12位和si的全部16位，共计28位
-; ds:bx - 写入内存逻辑地址
-;================
+mov ecx, 1000000 ; 这个值根据 CPU 频率调整，模拟 1 秒
+.delay:
+    dec ecx
+    jnz .delay          ; 循环直到 ECX 为 0
+mov ax, [floppy_buffer]
+mov dx, [floppy_buffer+2]
+mov cx, 16
+div cx
+mov ds,ax
+mov bx,dx
+call put_string
+
+hlt
+
+;====================
 read_floppy_disk_0:
     push ax
     push bx
     push cx
     push dx
+    push ds
+    push es
 
-    ; 0x7c29
-    mov byte [cs:@3],0
-    mov byte [cs:@3+1],0
-    mov byte [cs:@3+2],2
+    ; 再计算柱面号 
+    mov cx,FLPY_SECTORS_PER_TRACK*2
+    mov ax,si
+    mov dx,di
+    div cx
+    mov [@3],al
 
-    ; === 1. 复位软盘控制器 ===
-    mov dx, FDC_DOR     ; DOR 地址
-    mov al, 0x00
-    out dx, al
-    mov cx, 1000
-    .delay_loop:
-        loop .delay_loop  
-    mov al, 0x1C      ; 启用 FDC，选择驱动器 0 并打开马达  00011100
-    out dx, al        ; 写入到 DOR
-    call wait_fdc_ready        ; 等待马达启动
+    ; 再计算磁头号
+    mov cx,FLPY_SECTORS_PER_TRACK*2
+    mov ax,si
+    mov dx,di
+    div cx
+    mov ax,dx
+    xor dx,dx
+    mov cx,FLPY_SECTORS_PER_TRACK
+    div cx
+    mov [@3+1],al
 
-    ; 设置数据速率
-    mov dx, 0x3F7
-    mov al, 0x00          ; 500 kbps
-    out dx, al
-    call wait_fdc_ready
+    ; 计算扇区号
+    mov cx,18
+    mov ax,si
+    mov dx,di
+    div cx
+    inc dx
+    mov [@3+2],dl
 
-    ; 寻道
-    mov cl,[cs:@3]   ; 柱面号
-    mov ch,[cs:@3+1]   ; 磁头号   
-    call floppy_seek
+    ; 设置 DMA
+    call setup_dma
+    ; 重置软盘控制器
+    call reset_floppy
+    ; 读取数据
+    call read_sector
 
-    mov dx, FDC_DATA  ; FDC 数据端口
-    mov al, 0xE6      ; 读数据命令
-    out dx, al
-
-    mov al,ch   ; 磁头号   
-    shl al,2
-    out dx, al
-    
-    mov al, cl
-    out dx, al
-
-    mov al, ch
-    out dx, al
-
-    mov al,[cs:@3+2]   ; 扇区号
-    out dx, al
-
-    mov al, 2     ; 扇区大小
-    out dx, al
-
-    mov al, 18          ; 每磁道的扇区数
-    out dx, al
-
-    mov al, 0x1B      ; 间隙长度
-    out dx, al
-
-    mov al, 0xFF     ; 数据长度
-    out dx, al
-
-    call wait_fdc_ready
-
-    mov cx,512 ; 共读取 512 byte   0x7c77
-    mov dx, FDC_DATA          ; FDC 数据端口
-    .readw:
-        in al,dx
-        mov [bx],al
-        inc bx
-        loop .readw
-    
+    pop es
+    pop ds
     pop dx
     pop cx
     pop bx
     pop ax
-
     ret
 
-;================
-; 磁盘寻道
-; track = cl
-; head = ch
-;================
-floppy_seek:
-    push ax
-    push dx
-    mov dx, FDC_DATA          ; FDC 数据端口
-    mov al, 0x0F      ; 寻道命令
+setup_dma:
+    ; 1. 禁用 DMA 通道 2
+    mov dx, 0x0A       ; DMA 主屏蔽寄存器端口
+    mov al, 0x04       ; 禁用通道 2
     out dx, al
 
-    shl ch, 2
-    mov al, ch
+    ; 2. 设置 DMA 地址寄存器
+    mov dx, 0x04       ; 通道 2 的地址寄存器
+    mov ax, [floppy_buffer]     ; 数据缓冲区偏移地址（低 16 位）
+    out dx, al         ; 输出低 8 位
+    mov al, ah         ; 高 8 位
     out dx, al
 
-    mov al, cl
+    ; 3. 设置 DMA 页寄存器
+    mov dx, 0x81       ; 通道 2 的页寄存器
+    mov ax, [floppy_buffer+2] ; 数据缓冲区段地址（高 8 位段地址）      
     out dx, al
-    call wait_fdc_ready
-    pop dx
-    pop ax
+
+    ; 4. 设置 DMA 传输长度（计数寄存器）
+    mov dx, 0x05       ; 通道 2 的计数寄存器
+    mov ax, 511        ; 传输字节数减 1（512 - 1 = 511）
+    out dx, al         ; 输出低 8 位
+    mov al, ah         ; 高 8 位
+    out dx, al
+
+    ; 5. 设置 DMA 模式寄存器
+    mov dx, 0x0B       ; DMA 模式寄存器
+    mov al, 0x56       ; 通道 2，读模式，单字节传输
+    out dx, al
+
+    ; 6. 启用 DMA 通道 2
+    mov dx, 0x0A       ; DMA 主屏蔽寄存器
+    mov al, 0x02       ; 启用通道 2
+    out dx, al
+
+; 该设置floppy了
+reset_floppy:
+    ; 发送复位命令
+    mov dx, FDC_DOR
+    mov al, 0x00       ; 复位软盘控制器
+    out dx, al
+    mov al, 0x1C       ; 重新启用软盘控制器和驱动器 0
+    out dx, al
+
+        ; 等待复位完成
+    call wait_floppy_ready
     ret
 
-wait_fdc_ready:
-    push ax
-    push dx
-    mov dx, FDC_MSR          ; FDC 主状态寄存器
-.wait_loop:
-    in al, dx              ; 读取状态寄存器
-    and al, 0x80          ; 检查位 7 (BUSY) 
-    cmp al, 0x80          ; 检查位 7 (BUSY) 
-    jnz .wait_loop         ; 如果 FDC 忙碌，继续等待
-    pop dx
-    pop ax
+    ; 等待软盘控制器就绪
+    wait_floppy_ready:
+        mov dx, FDC_MSR
+    .wait:
+        in al, dx
+        test al, 0x80      ; 检查主状态寄存器的忙位（第 7 位）
+        jz .wait          ; 如果忙，继续等待
+        ret
+
+; ============================
+; 3. 读取软盘扇区
+; ============================
+read_sector:
+    ; 发送 READ DATA 命令到软盘控制器
+    mov dx, FDC_FIFO
+    mov al, 0xE6       ; 命令：读数据
+    out dx, al
+    mov al, [@3+1]       ; 起始头号
+    shl al, 2
+    or  al, 0x00
+    out dx, al
+    mov al, [@3]       ; 起始磁道号
+    out dx, al
+    mov al, [@3+1]       ; 起始头号
+    out dx, al
+    mov al, [@3+2]       ; 起始扇区号（第2个扇区）
+    out dx, al
+    mov al, 0x02       ; 每扇区 512 字节
+    out dx, al
+    mov al, [@3+2]
+    inc al
+    out dx, al
+    mov al, 0x1B       ; GAP3 长度
+    out dx, al
+    mov al, 0xFF       ; 数据长度（无关）
+    out dx, al
+
+    ; 等待操作完成
+    call wait_floppy_ready
+
+    ret 
+; playground area end
+
+; bx = 要输出的字符
+; 输出字符串
+put_string:
+    mov ah, 0x0e  ; 0x10的0x0e命令是输出字符到屏幕，并推进光标
+    mov al, [bx]  ; al为将要显示的字符
+    cmp al, 0
+    jz .return
+    int 0x10
+    inc bx
+    jmp put_string
+.return:
     ret
 
+msg: db 'x86 asm playground',0x0d,0x0a
+msg_end:
+floppy_buffer: dd 0x10000
 @3: db 0,0,0    ; 用于存储 柱面、磁头、扇区
-
-phy_base: dd 0x10000   ;程序被加载处的物理地址
-
 times 510-($-$$) db 0
-db 0x55, 0xaa
+db 0x55,0xaa
 ```
 
-数据保存到第二个扇区：
+数据保存到第 100 个扇区：
 
 ```plain
 db 'abcdefghijklmnopqrstuvwxyz'
@@ -381,8 +427,10 @@ db 'abcdefghijklmnopqrstuvwxyz'
 使用 build.sh 编译并烧录：
 
 ```bash
-build.sh mbr.asm 0 constants.asm 1
+build.sh mbr.asm 0 constants.asm 99
 ```
+
+![不使用BIOS中断运行结果](./img/06.png)
 
 ## 总结
 + **DOR** 用于控制软盘驱动器的选择、马达开关以及 FDC 的使能。
@@ -492,7 +540,7 @@ db 0x55, 0xaa
 
 [https://wiki.osdev.org/Floppy_Disk_Controller](https://wiki.osdev.org/Floppy_Disk_Controller)
 
-有人在论坛提问他的程序 bochs 跑不起来，在其他虚拟机可以。所以我也往这个方向考虑了一下。但还是无解。
+有人在论坛提问他的程序 bochs 跑不起来，在其他虚拟机可以。其实说的就是 bochs 对 PIO 的支持不好。
 
 [https://f.osdev.org/viewtopic.php?t=22338](https://f.osdev.org/viewtopic.php?t=22338)
 
