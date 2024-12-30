@@ -5,7 +5,9 @@ authors: [wjc133]
 tags: [others]
 ---
 
-（别问，问就是 ChatGPT 生成的）
+TinyFunction 草台班子在今天正式成立！
+
+<!-- truncate -->
 
 ### TinyFunction：专注于造轮子的老司机们
 

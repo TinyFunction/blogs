@@ -5,6 +5,10 @@ authors: [Agility6]
 tags: [go]
 ---
 
+Rob Pike 对 Go 语言设计理念的阐述中，一直在强调 Go 语言的简洁、清晰和高效。本文会通过揭示 Go 语言的底层实现，来理解语法糖的运作原理，并提供分析其他语言实现的思路。
+
+<!-- truncate -->
+
 ## Plan 9 & Go Plan 9 Assembler 基础
 
 [Rob_Pike](https://en.wikipedia.org/wiki/Rob_Pike)多次在Golang的会议提到，Go语言的设计理念追求**简洁、清晰和高效**。在使用的层面上Go语言确实能够给人一种简单的感觉，但是当问出「为什么」的时候，这些简单就会变成黑魔法。因此本篇文章是作为揭开Golang外衣窥探黑魔法的基石。

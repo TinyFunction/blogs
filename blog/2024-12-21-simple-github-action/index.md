@@ -5,6 +5,10 @@ authors: [wjc133]
 tags: [devops]
 ---
 
+利用 Github Action 可实现博客变更时发送企业微信消息的功能。本文通过 `.github/workflows/xxx.yml` 文件自定义 Github Action 的 CI/CD 流程，通过 `git diff` 检查博客变更，使用 curl 发送企业微信通知。并且可以将这一过程封装成可复用的 Github Action，发布到 GitHub Marketplace，供其他人复用。
+
+<!-- truncate -->
+
 ## 起因
 
 由于我们的博客是多人共同创作的，为了能及时得知有人发布了博客，希望能够在博客发布后通过企业微信的群机器人消息进行通知。于是就有了对 Github Action 的一些探索，我在这里记录一下。
