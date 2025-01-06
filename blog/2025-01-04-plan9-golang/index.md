@@ -1,5 +1,5 @@
 ---
-slug: assembler
+slug: plan9-golang
 title: Plan9 & Golang
 authors: [Agility6]
 tags: [go]
