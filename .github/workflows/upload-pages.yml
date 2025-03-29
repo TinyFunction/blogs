@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 2  # 拉取完整的提交历史
       # 👇 Build steps
@@ -33,15 +33,15 @@ jobs:
         run: npm run build
       # 👆 Build steps
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v4
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           # 👇 Specify build output path
           path: build
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
       - name: Docusaurus Blogs Changes to Work-WeChat Action
         uses: TinyFunction/docusaurus-blogs-changes-to-workwechat@1.0.5
         with:
