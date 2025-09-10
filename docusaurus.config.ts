@@ -37,9 +37,14 @@ const config: Config = {
   plugins: [
     [
         require("./src/plugins/plugin-baidu-analytics"),
-        { trackingID: "f523d310f5c60b171850572af75ebb99" }, //  传入trackingID参数
+        { trackingID: "f523d310f5c60b171850572af75ebb99" }, //  传入 trackingID 参数
     ],
   ],
+
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
 
   presets: [
     [
