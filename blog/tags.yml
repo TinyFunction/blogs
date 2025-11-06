@@ -6,7 +6,7 @@ io:
 x86:
   label: x86
   permalink: /x86
-  description: x86 asm
+  description: 介绍 x86 架构和汇编指令的系列文章
 
 others:
   label: 其他
@@ -14,9 +14,9 @@ others:
   description: 非技术文章
 
 go:
-  label: Go语言
+  label: Go 语言
   permalink: /go
-  description: Go语言相关知识点梳理
+  description: Go 语言相关知识点梳理
 
 network:
   label: 网络
@@ -27,3 +27,13 @@ devops:
   label: DevOps
   permalink: /devops
   description: DevOps 通过自动化“软件交付”和“架构变更”的流程，来使得构建、测试、发布软件能够更加地快捷、频繁和可靠
+
+distributed:
+  label: 分布式
+  permalink: /distributed
+  description: 分布式系统相关知识点
+
+telecom:
+  label: 电信
+  permalink: /telecom
+  description: 电信相关知识点
