@@ -1,6 +1,6 @@
 ---
 slug: x86-descriptor
-title: x86 番外三：描述符
+title: x86 番外三：描述符和选择子
 authors: [wjc133]
 tags: [x86]
 ---
